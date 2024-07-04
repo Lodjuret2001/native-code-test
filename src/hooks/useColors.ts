@@ -35,6 +35,7 @@ const useColors = () => {
 
   return {
     colors,
+    setColors,
     isRefreshing,
     handleRefresh,
   };

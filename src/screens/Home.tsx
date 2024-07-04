@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { HomeScreenProps } from "../@types/screenProps";
 import {
   StyleSheet,
@@ -12,11 +12,29 @@ import useColors from "../hooks/useColors";
 
 const Home = ({ navigation, route }: HomeScreenProps) => {
   const { message } = route.params;
-  const { colors, isRefreshing, handleRefresh } = useColors();
+  const newColor = route.params.newColor;
+  const { colors, setColors, isRefreshing, handleRefresh } = useColors();
+
+  useEffect(() => {
+    if (newColor) {
+      setColors((colors) => [newColor, ...colors]);
+    }
+  }, [newColor]);
 
   return (
     <View style={styles.container}>
       <Text style={styles.message}>{message}</Text>
+      <TouchableOpacity
+        style={styles.button}
+        onPress={() =>
+          navigation.navigate("CreateColorPalette", {
+            colors: colors,
+            name: "Create your Palette",
+          })
+        }
+      >
+        <Text style={styles.buttonText}>Create a new ColorPalette</Text>
+      </TouchableOpacity>
       <View style={styles.innerContainer}>
         <FlatList
           data={colors}
@@ -79,9 +97,17 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
   message: {
-    marginBottom: 50,
+    marginBottom: 20,
     fontSize: 20,
     fontWeight: "bold",
+  },
+  button: {
+    backgroundColor: "yellow",
+    padding: 20,
+    marginBottom: 20,
+    borderRadius: 10,
+    borderColor: "black",
+    borderWidth: 2,
   },
   buttonText: {
     fontSize: 15,
